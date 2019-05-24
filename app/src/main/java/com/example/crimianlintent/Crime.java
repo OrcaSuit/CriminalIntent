@@ -1,17 +1,29 @@
 package com.example.crimianlintent;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
+
 
 public class Crime {
     private UUID mId;
     private String mTitle;
-    private Date mDate;
+    private DateFormat mDate;
     private boolean mSolved;
+    public Date now;
+    private String mtime;
 
     public Crime(){
         mId = UUID.randomUUID();
-        mDate = new Date();
+        mDate =  new SimpleDateFormat("EEE, MMM d, ''yy");
+        now = new Date();
+        mtime=mDate.format(now);
+
+    }
+
+    public String gettime(){
+        return mtime;
     }
 
     public boolean isSolved() {
@@ -22,13 +34,11 @@ public class Crime {
         mSolved = solved;
     }
 
-    public Date getDate() {
+    public DateFormat getDate( ) {
         return mDate;
     }
 
-    public void setDate(Date date) {
-        mDate = date;
-    }
+    public void setDate(DateFormat date) { mDate = date; }
 
     public UUID getId(){
         return mId;
