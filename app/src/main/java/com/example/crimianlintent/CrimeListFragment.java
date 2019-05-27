@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
@@ -33,21 +32,23 @@ public class CrimeListFragment extends Fragment {
         return view;
     }
 
+
     @Override
-    public void onResume() {
+    public void onResume() { //프레그먼트 시작됨 .
         super.onResume();
         updateUI();
     }
 
     private void updateUI() {
-        CrimeLab crimeLab = CrimeLab.get(getActivity());
-        List<Crime> crimes = crimeLab.getCrimes();
+        CrimeLab crimeLab = CrimeLab.get(getActivity()); //context 가져옴
+        List<Crime> crimes = crimeLab.getCrimes();      // 범죄데이터를 가져옴
+
 
         if(mAdapter == null) {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyDataSetChanged();
+            mAdapter.notifyItemChanged(1);
         }
     }
 
@@ -85,11 +86,8 @@ public class CrimeListFragment extends Fragment {
         }
     }
 
-    private class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
+    private  class CrimeAdapter extends RecyclerView.Adapter<CrimeHolder>{
         private List<Crime> mCrimes;
-
-
-
 
         @NonNull
         @Override
@@ -104,6 +102,7 @@ public class CrimeListFragment extends Fragment {
             Crime crime = mCrimes.get(position);
             //holder.mTitleTextView.setText(crime.getTitle());
             holder.bindCrime(crime);
+
         }
 
         @Override
