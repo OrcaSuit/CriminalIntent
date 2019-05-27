@@ -16,7 +16,7 @@ public class Crime {
 
     public Crime(){
         mId = UUID.randomUUID();
-        mDate =  new SimpleDateFormat("EEE, MMM d, ''yy");
+        mDate =  new SimpleDateFormat("EEE, MMM d, ''yy"); // 문제 발생.
         now = new Date();
         mtime=mDate.format(now);
 
