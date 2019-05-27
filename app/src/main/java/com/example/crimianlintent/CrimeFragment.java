@@ -22,12 +22,11 @@ import java.util.List;
 import static java.time.OffsetDateTime.now;
 
 public class CrimeFragment extends Fragment {
+
     private Crime mCrime;
     private EditText mTitleField;
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
-
-
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
