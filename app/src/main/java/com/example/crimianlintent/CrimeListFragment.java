@@ -48,13 +48,12 @@ public class CrimeListFragment extends Fragment {
             mAdapter = new CrimeAdapter(crimes);
             mCrimeRecyclerView.setAdapter(mAdapter);
         } else {
-            mAdapter.notifyItemChanged(1);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
 
     private class CrimeHolder extends  RecyclerView.ViewHolder implements View.OnClickListener{
-        //public TextView mTitleTextView;
         private TextView mTitleTextView;
         private TextView mDateTextView;
         private CheckBox mSolvedCheckBox;
@@ -64,13 +63,12 @@ public class CrimeListFragment extends Fragment {
         public void bindCrime(Crime crime){
             mCrime = crime;
             mTitleTextView.setText(mCrime.getTitle());
-            mDateTextView.setText(mCrime.gettime()); //여기서 문제 gettime으로 변경.
+            mDateTextView.setText(mCrime.getDate().toString()); //여기서 문제 gettime으로 변경. -> 다시 getDate로 변경 ㅠㅠ
             mSolvedCheckBox.setChecked(mCrime.isSolved());
         }
 
         public CrimeHolder(View itemView){
             super(itemView);
-            //mTitleTextView = (TextView) itemView;
             itemView.setOnClickListener(this);
             mTitleTextView = (TextView)itemView.findViewById(R.id.list_item_crime_title_text_view);
             mDateTextView = (TextView)itemView.findViewById(R.id.list_item_crime_date_text_view);
@@ -98,7 +96,6 @@ public class CrimeListFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull CrimeHolder holder, int position) {
             Crime crime = mCrimes.get(position);
-            //holder.mTitleTextView.setText(crime.getTitle());
             holder.bindCrime(crime);
 
         }

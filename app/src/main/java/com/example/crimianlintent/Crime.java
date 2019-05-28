@@ -9,22 +9,21 @@ import java.util.UUID;
 public class Crime {
     private UUID mId;
     private String mTitle;
-    private DateFormat mDate;
+    private Date mDate;
     private boolean mSolved;
-    public Date now;
-    private String mtime;
+//    public Date now;
+//    private String mtime;
+//    private DateFormat mDateFmt;
 
     public Crime(){
         mId = UUID.randomUUID();
-        mDate =  new SimpleDateFormat("EEE, MMM d, ''yy"); // 문제 발생.
-        now = new Date();
-        mtime=mDate.format(now);
+        mDate =  new Date(); // 문제 발생.
+//      now = new Date();
+//      mtime=mDateFmt.format(now);
 
     }
 
-    public String gettime(){
-        return mtime;
-    }
+//    public String gettime(){return mtime;}
 
     public boolean isSolved() {
         return mSolved;
@@ -34,11 +33,11 @@ public class Crime {
         mSolved = solved;
     }
 
-    public DateFormat getDate( ) {
+    public Date getDate( ) {
         return mDate;
     }
 
-    public void setDate(DateFormat date) { mDate = date; }
+    public void setDate(Date date) { mDate = date; }
 
     public UUID getId(){
         return mId;
