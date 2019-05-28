@@ -18,12 +18,10 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 
-import java.text.DateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
-import static java.time.OffsetDateTime.now;
+
 
 public class CrimeFragment extends Fragment {
 
