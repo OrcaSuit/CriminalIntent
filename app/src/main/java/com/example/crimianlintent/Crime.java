@@ -1,7 +1,5 @@
 package com.example.crimianlintent;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,19 +9,15 @@ public class Crime {
     private String mTitle;
     private Date mDate;
     private boolean mSolved;
-//    public Date now;
-//    private String mtime;
-//    private DateFormat mDateFmt;
 
-    public Crime(){
-        mId = UUID.randomUUID();
-        mDate =  new Date(); // 문제 발생.
-//      now = new Date();
-//      mtime=mDateFmt.format(now);
-
+    public Crime() {
+        this(UUID.randomUUID());
     }
 
-//    public String gettime(){return mtime;}
+    public Crime(UUID id){
+        mId = id;
+        mDate = new Date();
+    }
 
     public boolean isSolved() {
         return mSolved;
