@@ -89,16 +89,16 @@ public class CrimeFragment extends Fragment {
         updateDate(mCrime.getDate().toString());
         //mDateButton.setEnabled(false);
         mDateButton.setOnClickListener(new View.OnClickListener(){
-                                           @Override
-                                           public void onClick(View v) {
-                                           FragmentManager manager = getFragmentManager();
-                                            DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
 
-                                            dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                                            dialog.show(manager, DIALOG_DATE);
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                dialog.show(manager, DIALOG_DATE);
 
-                                           }
-                                       });
+            }
+        });
 
         mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());

@@ -177,7 +177,7 @@ public class CrimeListFragment extends Fragment {
         }
 
         public void setCrimes(List<Crime> crimes){
-        mCrimes = crimes;
+            mCrimes = crimes;
         }
 
         public CrimeAdapter(List<Crime> crimes) {

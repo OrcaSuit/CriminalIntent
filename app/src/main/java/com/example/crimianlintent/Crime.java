@@ -10,6 +10,10 @@ public class Crime {
     private Date mDate;
     private boolean mSolved;
 
+    public void setId(String mId) {
+        this.mId = UUID.fromString(mId);
+    }
+
     public Crime() {
         this(UUID.randomUUID());
     }

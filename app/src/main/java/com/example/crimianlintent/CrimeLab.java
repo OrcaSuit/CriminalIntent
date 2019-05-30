@@ -1,16 +1,14 @@
 package com.example.crimianlintent;
 
-import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-
-import com.example.crimianlintent.database.CrimeBaseHelper;
-import com.example.crimianlintent.database.CrimeDbschema.CrimeTable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
@@ -27,78 +25,83 @@ public class CrimeLab {
 
     private CrimeLab(Context context) {
         mContext = context.getApplicationContext();
-        mDatabase = new CrimeBaseHelper(mContext).getWritableDatabase();
-
+        Realm.init(mContext);
     }
 
-    public void addCrime(Crime c) {
-        ContentValues values = getContentValues(c);
-        mDatabase.insert(CrimeTable.NAME, null, values);
+    public void addCrime(final Crime c) {
+        Realm mRealm = Realm.getDefaultInstance();
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                CrimeRO crime = realm.createObject(CrimeRO.class);
+                crime.mId = c.getId().toString();
+                crime.mTitle = c.getTitle();
+                crime.mDate = c.getDate();
+                crime.mSolved = c.isSolved();
+            }
+        });
+        mRealm.close();
     }
 
     public List<Crime> getCrimes() {
         List<Crime> crimes = new ArrayList<>();
+        Realm mRealm = Realm.getDefaultInstance();
 
-        CrimeCursorWrapper cursor = queryCrimes(null, null);
+        try {
+            RealmResults<CrimeRO> results = mRealm.where(CrimeRO.class).findAll();
 
-        try{
-            cursor.moveToFirst();
-            while(!cursor.isAfterLast()){
-                crimes.add(cursor.getCrime());
-                cursor.moveToNext();
+            for (int i = 0; i < results.size(); i++) {
+                Crime crime = new Crime();
+
+                crime.setId(results.get(i).mId);
+                crime.setTitle(results.get(i).mTitle);
+                crime.setDate(results.get(i).mDate);
+                crime.setSolved(results.get(i).mSolved);
+
+                crimes.add(crime);
             }
         } finally {
-            cursor.close();
+            if (mRealm != null) {
+                mRealm.close();
+            }
         }
+
+        mRealm.close();
+
         return crimes;
     }
 
     public Crime getCrime(UUID id) {
-        CrimeCursorWrapper cursor = queryCrimes(
-                CrimeTable.Cols.UUID + "=?",
-                new String[] {id.toString()}
-        );
 
-        try {
-            if (cursor.getCount() == 0) {
-                return null;
+        Realm mRealm = Realm.getDefaultInstance();
+        CrimeRO result = mRealm.where(CrimeRO.class).equalTo("mId", id.toString()).findFirst();
+
+        Crime crime = new Crime();
+
+        crime.setId(result.mId);
+        crime.setTitle(result.mTitle);
+        crime.setDate(result.mDate);
+        crime.setSolved(result.mSolved);
+
+        mRealm.close();
+
+        return crime;
+    }
+
+    public void updateCrime(final Crime crime) {
+
+        Realm mRealm = Realm.getDefaultInstance();
+        final CrimeRO result = mRealm.where(CrimeRO.class).equalTo("mId", crime.getId().toString()).findFirst();
+
+        mRealm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                result.mTitle = crime.getTitle();
+                result.mDate = crime.getDate();
+                result.mSolved = crime.isSolved();
             }
+        });
 
-            cursor.moveToFirst();
-            return cursor.getCrime();
-        } finally {
-            cursor.close();
-        }
-    }
-
-    public void updateCrime(Crime crime) {
-        String uuidString = crime.getId().toString();
-        ContentValues values = getContentValues(crime);
-
-        mDatabase.update(CrimeTable.NAME, values, CrimeTable.Cols.UUID + "=?", new String[]{uuidString});
-    }
-
-    private static ContentValues getContentValues(Crime crime) {
-        ContentValues values = new ContentValues();
-        values.put(CrimeTable.Cols.UUID, crime.getId().toString());
-        values.put(CrimeTable.Cols.TITLE, crime.getTitle());
-        values.put(CrimeTable.Cols.DATE, crime.getDate().getTime());
-        values.put(CrimeTable.Cols.SOLVED, crime.isSolved() ? 1 : 0);
-
-        return values;
-    }
-
-    private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs){
-        Cursor cursor = mDatabase.query(
-                CrimeTable.NAME,
-                null,
-                whereClause,
-                whereArgs,
-                null,
-                null,
-                null,
-                null
-        );
-        return new CrimeCursorWrapper(cursor);
+        mRealm.close();
     }
 }
