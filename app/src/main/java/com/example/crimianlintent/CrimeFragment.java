@@ -2,6 +2,8 @@ package com.example.crimianlintent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -153,6 +155,25 @@ public class CrimeFragment extends Fragment {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate(mCrime.getDate().toString());
+        } else if (requestCode == REQUEST_CONTACT && data != null){
+            Uri contactUri = data.getData();
+            //값 을  반환할 쿼리 필드 지정
+            String[] queryFields = new String[] { ContactsContract.Contacts.DISPLAY_NAME
+            };
+            //쿼리 수행 contactUri는 SQL의 Where 절에 해당
+            Cursor c = getActivity().getContentResolver().query(contactUri,queryFields, null, null ,null);
+            try{
+                if(c.getCount() == 0) {
+                    return;
+                }
+                // 첫번째 ㄷ이터 행의 첫번째 열을 추출(용의자 이름)
+                c.moveToFirst();
+                String suspect = c.getString(0);
+                mCrime.setSuspect(suspect);
+                mSuspectButton.setText(suspect);
+            }finally {
+                c.close();
+            }
         }
     }
 
