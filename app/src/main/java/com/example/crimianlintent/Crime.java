@@ -1,5 +1,6 @@
 package com.example.crimianlintent;
 
+import java.io.File;
 import java.util.Date;
 import java.util.UUID;
 
@@ -31,6 +32,10 @@ public class Crime {
     public String getSuspect() { return mSuspect; }
 
     public void setSuspect(String suspect) { mSuspect = suspect;}
+
+    public String getPhotoFilename() {
+        return "IMG_"+ getId().toString() + ".jpg";
+    }
 
     public Date getDate( ) {
         return mDate;
