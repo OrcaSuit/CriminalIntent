@@ -39,9 +39,6 @@ public class CrimeListFragment extends Fragment {
     }
 
 
-
-
-
     public void onAttach(Context context) {
         super.onAttach(context);
         mCallbacks = (Callbacks)context;
@@ -136,7 +133,7 @@ public class CrimeListFragment extends Fragment {
         activity.getSupportActionBar().setSubtitle(subtitle);
     }
 
-    private void updateUI() {
+    public void updateUI() {
         CrimeLab crimeLab = CrimeLab.get(getActivity()); //context 가져옴
         List<Crime> crimes = crimeLab.getCrimes();      // 범죄데이터를 가져옴
 
