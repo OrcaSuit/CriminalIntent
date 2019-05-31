@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +36,7 @@ public class CrimeFragment extends Fragment {
     private Button mDateButton;
     private CheckBox mSolvedCheckBox;
 
-    public static CrimeFragment newInstance(UUID crimeId){
+    public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
         args.putSerializable(ARG_CRIME_ID, crimeId);
 
@@ -64,7 +65,7 @@ public class CrimeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_crime, container, false);
 
-        mTitleField = (EditText)v.findViewById(R.id.crime_title);
+        mTitleField = (EditText) v.findViewById(R.id.crime_title);
         mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
             @Override
@@ -85,24 +86,24 @@ public class CrimeFragment extends Fragment {
 
         Date now = new Date();
 
-        mDateButton =(Button)v.findViewById(R.id.crime_date);
+        mDateButton = (Button) v.findViewById(R.id.crime_date);
         updateDate(mCrime.getDate().toString());
         //mDateButton.setEnabled(false);
-        mDateButton.setOnClickListener(new View.OnClickListener(){
-                                           @Override
-                                           public void onClick(View v) {
-                                           FragmentManager manager = getFragmentManager();
-                                            DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
+        mDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager manager = getFragmentManager();
+                DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
 
-                                            dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
-                                            dialog.show(manager, DIALOG_DATE);
+                dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
+                dialog.show(manager, DIALOG_DATE);
 
-                                           }
-                                       });
+            }
+        });
 
-        mSolvedCheckBox = (CheckBox)v.findViewById(R.id.crime_solved);
+        mSolvedCheckBox = (CheckBox) v.findViewById(R.id.crime_solved);
         mSolvedCheckBox.setChecked(mCrime.isSolved());
-        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+        mSolvedCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 //범죄 해결 여부 속성 값을 설정한다.
@@ -115,10 +116,10 @@ public class CrimeFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(resultCode != Activity.RESULT_OK){
+        if (resultCode != Activity.RESULT_OK) {
             return;
         }
-        if(requestCode == REQUEST_DATE){
+        if (requestCode == REQUEST_DATE) {
             Date date = (Date) data.getSerializableExtra(DatePickerFragment.EXTRA_DATE);
             mCrime.setDate(date);
             updateDate(mCrime.getDate().toString());
@@ -127,5 +128,26 @@ public class CrimeFragment extends Fragment {
 
     private void updateDate(String s) {
         mDateButton.setText(s);
+    }
+
+    private String getCrimeReport() {
+        String solvedString = null;
+            if (mCrime.isSolved()) {
+                solvedString = getString(R.string.crime_report_solved);
+            } else {
+                solvedString = getString(R.string.crime_report_unsolved);
+            }
+            String dateFormat = "EEE, MMM dd";
+            String dateString = DateFormat.format(dateFormat, mCrime.getDate()).toString();
+
+            String suspect = mCrime.getSuspect();
+            if (suspect == null) {
+                suspect = getString(R.string.crime_report_no_suspect);
+            } else {
+                suspect = getString(R.string.crime_report_suspect, suspect);
+            }
+            String report = getString(R.string.crime_report, mCrime.getTitle(), dateString, solvedString, suspect);
+
+            return report;
     }
 }
