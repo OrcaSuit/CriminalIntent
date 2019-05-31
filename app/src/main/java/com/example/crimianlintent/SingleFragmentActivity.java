@@ -15,13 +15,13 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
 
     @LayoutRes
     protected int getLayoutResId(){
-        return R.layout.activity_crime_pager;
+        return R.layout.activity_fragment;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_crime);
+
         setContentView(getLayoutResId());
 
         FragmentManager fm = getSupportFragmentManager();
