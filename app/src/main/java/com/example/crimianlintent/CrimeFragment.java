@@ -47,6 +47,7 @@ public class CrimeFragment extends Fragment {
     private Button mReportButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
+    private File mPhotoFile;
 
 
     public static CrimeFragment newInstance(UUID crimeId) {
@@ -159,7 +160,7 @@ public class CrimeFragment extends Fragment {
 
         mPhotoButton = (ImageButton)v.findViewById(R.id.crime_camera);
         mPhotoView = (ImageView)v.findViewById(R.id.crime_photo);
-
+        mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
         return v;
     }
 
